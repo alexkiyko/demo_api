@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/alexkiyko/demo_api/issues"
   },
-  "homepage": "https://github.com/alexkiyko/demo_api#readme"
+  "homepage": "https://github.com/alexkiyko/demo_api#readme",
+  "dependencies": {
+    "axios": "^0.22.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.2"
+  }
 }
