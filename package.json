@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha"
+        "test": "mocha --colors ./test/**/*test.js 2>&1 | tee ./reports/report.log"
     },
     "repository": {
         "type": "git",

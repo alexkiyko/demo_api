@@ -21,12 +21,11 @@ let store = {
 };
 
 describe("Verify crete new store - happy path", () => {
-    it("Crate a new store", async () => {
+    before("Crate a new store", async () => {
         response = await postData(`${baseUrl}/stores`, store);
-        console.log(response);
     });
 
-    it("Verufy full store response", function () {
+    it("Verufy full store response", function (done) {
         expect(response.id).to.be.ok;
         expect(response.name).eql(store.name);
         expect(response.type).eql(store.type);
@@ -40,11 +39,13 @@ describe("Verify crete new store - happy path", () => {
         expect(response.hours).eql(store.hours);
         // expect(moment(response.updatedAt).isSameOrAfter(moment()), "updatedAt time should match").to.be.true;
         // expect(moment(response.createdAt).isSameOrAfter(moment()), "createdAt time should match").to.be.true;
+        done()
     });
 
-    it("Verify individualy store response", () => {
+    it("Verify individualy store response", (done) => {
         expect(typeof response.name).to.eql("string");
         expect(response.name).eql(store.name);
+        done()
     });
 });
 
