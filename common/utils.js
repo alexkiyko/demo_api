@@ -1,4 +1,4 @@
-const axios = require("axios");
+const axios = require('axios').default;
 const expect = require("chai").expect;
 
 async function getData(url) {
@@ -39,6 +39,28 @@ async function postInvalidData(url, body) {
     expect(response.response.data.className).to.eql("bad-request");
     return response.response.data.errors;
 }
+
+axios.interceptors.request.use(x => {
+    const headers = {
+        ...x.headers.common,
+        ...x.headers[x.method],
+        ...x.headers
+    };
+
+    ['common','get', 'post', 'head', 'put', 'patch', 'delete'].forEach(header => {
+        delete headers[header]
+    })
+
+    const printable = `Request: ${new Date()} \nMethod: ${x.method.toUpperCase()} \nUrl: ${x.url} \nHeaders: ${ JSON.stringify(headers)} \nBody: ${ JSON.stringify( x.data) }`
+    console.log(printable)
+    return x;
+})
+
+axios.interceptors.response.use(x => {
+    const printable = `Response: ${new Date()}  \nStatus: ${x.status}  \nHeaders: ${JSON.stringify(x.headers)}  \nBody: ${ JSON.stringify(x.data) }`
+    console.log(printable)
+    return x;
+})
 
 module.exports = {
     getData,
