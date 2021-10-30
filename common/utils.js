@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-const expect = require("chai").expect;
+const logger = require('./../logger/logger');
 
 async function getData(url) {
     const response = await axios({
@@ -8,8 +8,7 @@ async function getData(url) {
     })
         .then((res) => res)
         .catch((err) => err);
-    expect(response.status).equal(200);
-    return response.data;
+    return response;
 }
 
 async function postData(url, body) {
@@ -20,24 +19,26 @@ async function postData(url, body) {
     })
         .then((res) => res)
         .catch((err) => err);
-    expect(response.status).equal(201);
-    return response.data;
+        
+    if (response.isAxiosError) {
+        // logger.info(response.response);
+        console.log(response.response.data)
+        return response.response
+
+    } else {
+        // console.log(response.data)
+        return response
+    }
 }
 
-async function postInvalidData(url, body) {
+async function deleteData(url) {
     const response = await axios({
-        method: "post",
-        url: url,
-        data: body,
+        method: "delete",
+        url: url
     })
         .then((res) => res)
         .catch((err) => err);
-    expect(response.response.status).equal(400);
-    expect(response.response.data.name).to.eql("BadRequest");
-    expect(response.response.data.message).to.eql("Invalid Parameters");
-    expect(response.response.data.code).to.eql(400);
-    expect(response.response.data.className).to.eql("bad-request");
-    return response.response.data.errors;
+    return response;
 }
 
 axios.interceptors.request.use(x => {
@@ -57,7 +58,9 @@ axios.interceptors.request.use(x => {
 })
 
 axios.interceptors.response.use(x => {
-    const printable = `Response: ${new Date()}  \nStatus: ${x.status}  \nHeaders: ${JSON.stringify(x.headers)}  \nBody: ${ JSON.stringify(x.data) }`
+    // const printable = `Response: ${new Date()}  \nStatus: ${x.status}  \nHeaders: ${JSON.stringify(x.headers)}  \nBody: ${ JSON.stringify(x.data) }`
+    const printable = `Response: \nStatus: ${x.status} \nBody: ${ JSON.stringify(x.data) }`
+
     console.log(printable)
     return x;
 })
@@ -65,5 +68,5 @@ axios.interceptors.response.use(x => {
 module.exports = {
     getData,
     postData,
-    postInvalidData,
+    deleteData
 };
